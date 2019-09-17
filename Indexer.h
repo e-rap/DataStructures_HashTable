@@ -1,5 +1,7 @@
 #include <string>
 #include <vector>
+#include <utility>     // for std::make_pair
+#include "HashTable.h"
 
 namespace indexer
 {
@@ -22,6 +24,9 @@ namespace indexer
       size_t line; ///< line
       size_t col;  ///< column
     };
+
+    using Dictionary = HashTable<std::string, std::vector<Index>>;
+
   public:
     /** Build index of a text file */
     Indexer(const std::string& file_name);
@@ -31,5 +36,8 @@ namespace indexer
      * The sorting order is defined by line and column position in ascending order.
      */
     std::vector<Index> GetIndex(const std::string& word);
+
+  private:
+    Dictionary dict;
   };
 }

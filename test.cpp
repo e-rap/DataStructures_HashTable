@@ -1,4 +1,4 @@
-// Indexer.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// Idexer.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 #include <iostream>
 #include "Indexer.h"

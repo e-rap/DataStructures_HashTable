@@ -9,7 +9,7 @@
 #include <string>
 #include <array>
 
-// TODO: Remove static const for table size?
+#define INITIAL_HASH_TABLE_SIZE 101 ///< used to set std::array size
 
 /**
  * Templated Hash Table class. uses a hashing function to store keys.
@@ -20,20 +20,19 @@ template <typename KeyType, typename ValueType>
 class HashTable
 {
 private:
-  using Entry = std::pair<KeyType, ValueType>; ///< Data structure to store key and value
-  using Bucket = std::list<Entry>;             ///< bucket to store collisions.
-  // TODO: Remove array and use vector
-  using Table = std::array<Bucket, 101>;       ///< Table of the hash table.
+  using Entry = std::pair<KeyType, ValueType>;               ///< Data structure to store key and value
+  using Bucket = std::list<Entry>;                           ///< bucket to store collisions.
+  using Table = std::array<Bucket, INITIAL_HASH_TABLE_SIZE>; ///< Table of the hash table.
 
 public:
-  using HashFunc = std::function<size_t(const KeyType&)>; ///< Hash Function type
+  using HashFunc = std::function<size_t(const KeyType&)>;    ///< Hash Function type
 
-  /**
-   * Constructor.
-   *
-   * @param[in] hash_func A user specified hash_function. defaults to
-   *            the internal default hash function if not specified.
-   */
+  ///
+  /// Constructor.
+  ///
+  /// @param[in] hash_func A user specified hash_function. defaults to
+  ///            the internal default hash function if not specified.
+  ///
   HashTable();
 
   HashTable(HashFunc hash_func);
@@ -41,48 +40,43 @@ public:
   /** Destructor. */
   virtual ~HashTable();
 
-  /**
-   * Inserts key-value pair into the hash table.
-   *
-   * If the key exists overwrites the existing value.
-   *
-   * @param[in] key key to insert.
-   * @param[in] value value to insert.
-   */
+  ///
+  /// Inserts key-value pair into the hash table.
+  ///
+  /// If the key exists overwrites the existing value.
+  ///
+  /// @param[in] key key to insert.
+  /// @param[in] value value to insert.
+  ///
   void insert(const KeyType& key, ValueType& value);
 
-  /**
-   * Returns a reference to the value if the key exists.
-   * If the key does not exist, inserts a key with a default
-   * constructed value
-   *
-   * @returns A reference to the value for the input key.
-   */
+  ///
+  /// Returns a reference to the value if the key exists.
+  /// If the key does not exist, inserts a key with a default
+  /// constructed value
+  ///
+  /// @returns A reference to the value for the input key.
+  ///
   ValueType& at(const KeyType& key);
 
-  //TODO: Add operator overload for acesss and updating.
-  //ValueType& operator[](const KeyType& key);
-
-  size_t size() const;             ///< Returns the number of keys in the hash_table.
-
+  size_t size() const;                    ///< Returns the number of keys in the hash_table.
   bool exists(const KeyType& key) const;  ///< Checks if key exists.
-
-  void clear();                    ///< Clears the entire contents of the hashtable.
+  void clear();                           ///< Clears the entire contents of the hashtable.
 
 private:
-  Entry* find_key(const KeyType& key);           ///< returns pointer to entry if key is within hashtable, else returns nullptr
+  Entry* find_key(const KeyType& key);    ///< returns pointer to entry if key is within hashtable, else returns nullptr
 
   static size_t default_hash_func(const std::string& key);  ///< Default hash function.
 
-  size_t num_keys;           ///< Number of key,value pairs stored in the hash table.
-  static const size_t num_buckets;  ///< Number of table within the hashtable. Should be a prime number 1.3x the number of keys.
-  HashFunc hash_func;        ///< Hashing function.
-  Table table;               ///< The table of the hash table.
+  size_t num_keys;                        ///< Number of key,value pairs stored in the hash table.
+  static const size_t num_buckets;        ///< Number of table within the hashtable. Should be a prime number 1.3x the number of keys.
+  HashFunc hash_func;                     ///< Hashing function.
+  Table table;                            ///< The table of the hash table.
 
 };
 
 template<typename KeyType, typename ValueType>
-const size_t HashTable<KeyType, ValueType>::num_buckets = 101;
+const size_t HashTable<KeyType, ValueType>::num_buckets = INITIAL_HASH_TABLE_SIZE;
 
 template<typename KeyType, typename ValueType>
 inline HashTable<KeyType, ValueType>::HashTable()
@@ -90,12 +84,10 @@ inline HashTable<KeyType, ValueType>::HashTable()
 {
 }
 
-//TODO: Remove hardcoded value for numu_buckets
 template<typename KeyType, typename ValueType>
 inline HashTable<KeyType, ValueType>::HashTable(HashFunc hash_func)
   : hash_func{ hash_func }, table{}, num_keys{ 0 }
 {
-  //TODO: Add constructor code?
 }
 
 template<typename KeyType, typename ValueType>
@@ -112,7 +104,7 @@ inline void HashTable<KeyType, ValueType>::insert(const KeyType& key, ValueType&
   if (entry_ptr == nullptr)
   {
     size_t bucket_index{ hash_func(key) };
-    table[bucket_index].emplace_back(key, value); //TODO: Check how to use
+    table[bucket_index].emplace_back(key, value);
     ++num_keys;
   }
   else

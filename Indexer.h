@@ -21,8 +21,8 @@ namespace indexer
     ///
     struct Index
     {
-      size_t line; ///< line
-      size_t col;  ///< column
+      size_t line; ///< line number from file
+      size_t col;  ///< column number from file
     };
 
     using Dictionary = HashTable<std::string, std::vector<Index>>;
@@ -41,6 +41,6 @@ namespace indexer
     /// Parses all words out of the input file and builds the index
     void IndexFile(const std::string& file_name);
 
-    Dictionary dict;
+    Dictionary dict; ///< dictionary of all indexed words
   };
 }
